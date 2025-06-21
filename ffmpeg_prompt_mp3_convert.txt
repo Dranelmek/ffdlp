@@ -1,0 +1,1 @@
+ffmpeg -i "[FILENAME].opus" -ab 320k "output.mp3"
