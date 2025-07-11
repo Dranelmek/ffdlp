@@ -6,17 +6,23 @@
 
 import subprocess
 from utils import *
-from dlp import *
+from scripts import *
 
 def run_command(command):
     subprocess.run(command, shell=True)
 
+def test(conf):
+    # if conf["AUTONAMEGEN"]:
+    #     run_command(auto_ytdlp(conf["test_url"]))
+    # elif conf["USESTATICOUTPUTNAME"]:
+    #     run_command(auto_ytdlp(conf["test_url"], conf["STATICOUTPUTNAME"]))
+    # else:
+    #     run_command(std_ytdlp(conf["test_url"]))
+    run_command(audio_ytdlp(conf["test_url"]))
+
 def main():
     config = load_or_create_config()
-    if config["AUTONAMEGEN"]:
-        run_command(auto_ytdlp(config["test_url"]))
-    else:
-        run_command(std_ytdlp(config["test_url"]))
+    test(config)
     
 
 if __name__ == "__main__":

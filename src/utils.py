@@ -23,3 +23,7 @@ def load_or_create_config(config_path="config.json"):
 def save_config(config, config_path="config.json"):
     with open(config_path, "w", encoding="utf-8") as f:
         json.dump(config, f, indent=4)
+
+def edit_config(config, key, value, config_path="config.json"):
+    config[key] = value
+    save_config(config, config_path)

@@ -2,5 +2,7 @@
     "AUTONAMEGEN": false,
     "DEFAULTOUTPUTPATH": "E:/Production/Magic/video",
     "test_name": "Waluigi lol",
-    "test_url": "https://www.youtube.com/watch?v=ouq9rVFJNDk"
+    "test_url": "https://www.youtube.com/watch?v=ouq9rVFJNDk",
+    "STATICOUTPUTNAME": "output",
+    "USESTATICOUTPUTNAME": true
 }

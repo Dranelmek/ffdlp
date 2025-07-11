@@ -10,3 +10,6 @@
 *.wav
 *.ogg
 *.flac
+
+config.json
+output/
