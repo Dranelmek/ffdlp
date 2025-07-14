@@ -1,2 +1,3 @@
+This application was developed for windows.
 You will need the applications yt-dlp and ffmpeg within the project folder and added to your system path for this program to work
 This is simply an easy to use interface to act as a wrapper for downloading yt videos and changing file formats.

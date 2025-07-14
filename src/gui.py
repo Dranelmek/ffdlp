@@ -1,8 +1,12 @@
 import tkinter as tk
+from scripts import *
+from utils import *
 
 class App(tk.Tk):
+    """Main application class for the FFDLP GUI."""
     def __init__(self):
         super().__init__()
+        self.config = load_or_create_config()
         self.width = 300
         self.height = 210
         self.title("FFDLP GUI")
@@ -17,7 +21,7 @@ class App(tk.Tk):
         self.input_entry = tk.Entry(self.input_frame, width=30)
         self.input_entry.grid(row=2, column=1, padx=(1, 10), pady=0, sticky=(tk.W))
 
-        self.import_button = tk.Button(self.input_frame, text="clipboard", command=lambda: self.input_entry.insert(tk.END, "Clipboard content"))
+        self.import_button = tk.Button(self.input_frame, text="clipboard", command=lambda: self.set_input(self.get_clipboard_data()))
         self.import_button.grid(row=2, column=2, padx=5, pady=10)
 
         self.input_frame.pack(pady=5)
@@ -33,7 +37,7 @@ class App(tk.Tk):
         self.setting_label = tk.Label(self, text="Settings:")
         self.setting_label.pack()
         self.setting_var = tk.StringVar(self)
-        self.options = ["Auto Name", "Custom Name", "Date Name", "Static Name"]
+        self.options = ["Auto Name", "Custom Name", "Date Name", "Static Name", "Search", "Music"]
         self.setting_var.set(self.options[0])  # Default value
         self.setting_menu = tk.OptionMenu(self, self.setting_var, *self.options, command=self.on_option_change)
         self.setting_menu.pack(pady=(0, 10))
@@ -59,9 +63,10 @@ class App(tk.Tk):
         self.start_button = tk.Button(self.buttons_frame, text="Start", command=self.start_action)
         self.start_button.pack(side=tk.LEFT, padx=5)
 
-        # Files button
-        self.files_button = tk.Button(self.buttons_frame, text="Files", command=lambda: print("Files clicked"))
-        self.files_button.pack(side=tk.LEFT, padx=5)
+        # Convert button
+        self.convert_button = tk.Button(self.buttons_frame, text="Convert", command=lambda: print("Convert clicked"))
+        self.convert_button.pack(side=tk.LEFT, padx=5)
+        
 
         self.buttons_frame.pack(pady=5)
 
@@ -71,13 +76,52 @@ class App(tk.Tk):
         else:
             self.conditional_inner_frame.grid_remove()
 
+    def get_clipboard_data(self):
+        try:
+            root = tk.Tk()
+            root.withdraw()  # Hide the root window
+            clipboard_data = root.clipboard_get()
+            return clipboard_data
+        except tk.TclError:
+            return None
+        
+    def set_input(self, input_value):
+        self.input_entry.delete(0, tk.END)
+        self.input_entry.insert(tk.END, input_value)
+
     def start_action(self):
-        input_value = self.input_entry.get()
-        setting_value = self.setting_var.get()
-        print(f"Input: {input_value}, Setting: {setting_value}")
+
+        if self.input_entry.get() == "":
+            print("Input field is empty. Please enter a URL or search term.")
+            return
+
+        match self.setting_var.get():
+            case "Auto Name":
+                command = std_ytdlp(self.input_entry.get())
+            case "Custom Name":
+                command = auto_ytdlp(self.input_entry.get(), self.conditional_var.get())
+            case "Date Name":
+                command = auto_ytdlp(self.input_entry.get())
+            case "Static Name":
+                command = auto_ytdlp(self.input_entry.get(), self.config["STATICOUTPUTNAME"])
+            case "Search":
+                command = auto_ytdlp(self.input_entry.get(), '%(title)s')
+            case "Music":
+                command = audio_ytdlp(self.input_entry.get())
+            case _:
+                # this case is just a fallback, it should never be reached
+                command = None
+                print("No valid command selected.")
+                return
+            
+        run_command(command)
+        
+
+        
+
 
 if __name__ == "__main__":
     app = App()
     app.mainloop()
 
-# TODO: Implement functionality for buttons and settings
+# TODO: Implement file conversion and settings management
