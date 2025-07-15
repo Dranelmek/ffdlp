@@ -1,6 +1,6 @@
 import datetime
 import os
-from utils import check_config
+from utils import check_config, filename_without_extension
 
 def auto_ytdlp(url, name=None):
     # This function returns the yt-dlp command to download a YouTube video
@@ -21,10 +21,6 @@ def audio_ytdlp(url):
 
 def video_convert_mp4(input_file):
     # This function returns the ffmpeg command to convert a video file to mp4 format
-    def filename_without_extension(file_path):
-        # get the file name from a path such as "output/temp/video.mp4" or "output\temp\video.mp4"
-        return os.path.splitext(os.path.basename(file_path))[0]
-        return
     output_file = filename_without_extension(input_file)
     print(f"FILENAME WITHOUT EXTENSION: {output_file}")
     return f'ffmpeg -i "{input_file}" -map 0 -c:v libx264 -preset slow -crf 23 -c:a aac -b:a 192k -movflags +faststart "{check_config("DEFAULTOUTPUTPATH")}/{output_file}.mp4"'

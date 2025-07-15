@@ -45,3 +45,7 @@ def get_file_names(directory=check_config("TEMPFILEPATH")):
     if not os.path.exists(directory):
         return []
     return [f for f in os.listdir(directory) if os.path.isfile(os.path.join(directory, f))]
+
+def filename_without_extension(file_path):
+        # get the file name from a path such as "output/temp/video.mp4" or "output\temp\video.mp4"
+        return os.path.splitext(os.path.basename(file_path))[0]

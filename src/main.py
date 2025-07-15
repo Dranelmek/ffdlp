@@ -10,7 +10,8 @@ from scripts import *
 from os import listdir
 from os.path import isfile, join
 
-def test(conf):
+def test(conf=None):
+    # conf = load_or_create_config()
     # if conf["AUTONAMEGEN"]:
     #     run_command(auto_ytdlp(conf["test_url"]))
     # elif conf["USESTATICOUTPUTNAME"]:
@@ -18,13 +19,12 @@ def test(conf):
     # else:
     #     run_command(std_ytdlp(conf["test_url"]))
     # run_command(audio_ytdlp(conf["test_url"]))
-    mypath = "output/temp"
-    onlyfiles = [f for f in listdir(mypath) if isfile(join(mypath, f))]
-    print(f"Files in output/temp: {onlyfiles}")
+    # mypath = os.getcwd()
+    # print(f"Current working directory: {filename_without_extension(mypath)}")
+    pass
 
 def main():
-    config = load_or_create_config()
-    test(config)
+    test()
     
 
 if __name__ == "__main__":

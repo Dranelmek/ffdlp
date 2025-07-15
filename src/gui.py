@@ -126,6 +126,8 @@ class App(tk.Tk):
         
         print(f"Running command: {command}")
         run_command(command)
+        if check_config("AUTOCONVERT"):
+            self.convert_action()
         
 
         
