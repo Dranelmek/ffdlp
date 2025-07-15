@@ -12,12 +12,6 @@ from os.path import isfile, join
 
 def test(conf=None):
     # conf = load_or_create_config()
-    # if conf["AUTONAMEGEN"]:
-    #     run_command(auto_ytdlp(conf["test_url"]))
-    # elif conf["USESTATICOUTPUTNAME"]:
-    #     run_command(auto_ytdlp(conf["test_url"], conf["STATICOUTPUTNAME"]))
-    # else:
-    #     run_command(std_ytdlp(conf["test_url"]))
     # run_command(audio_ytdlp(conf["test_url"]))
     # mypath = os.getcwd()
     # print(f"Current working directory: {filename_without_extension(mypath)}")

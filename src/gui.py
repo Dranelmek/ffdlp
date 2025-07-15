@@ -37,7 +37,7 @@ class App(tk.Tk):
         self.setting_label.pack()
         self.setting_var = tk.StringVar(self)
         self.options = ["Auto Name", "Custom Name", "Date Name", "Static Name", "Search", "Music"]
-        self.setting_var.set(self.options[0])  # Default value
+        self.setting_var.set(self.options[check_config("DEFAULTOPTION")])
         self.setting_menu = tk.OptionMenu(self, self.setting_var, *self.options, command=self.on_option_change)
         self.setting_menu.pack(pady=(0, 10))
 
@@ -55,11 +55,11 @@ class App(tk.Tk):
         self.buttons_frame = tk.Frame(self)
         
         # Settings button
-        self.settings_button = tk.Button(self.buttons_frame, text="Settings", command=lambda: print("Settings clicked"))
+        self.settings_button = tk.Button(self.buttons_frame, text="Settings", command=lambda: self.open_settings())
         self.settings_button.pack(side=tk.LEFT, padx=5)
 
         # Start button
-        self.start_button = tk.Button(self.buttons_frame, text="Start", command=self.start_action)
+        self.start_button = tk.Button(self.buttons_frame, text="Start", command=lambda: self.start_action)
         self.start_button.pack(side=tk.LEFT, padx=5)
 
         # Convert button
@@ -98,6 +98,8 @@ class App(tk.Tk):
             print(f"Running command: {command}")
             run_command(command)
             print(f"Converted {file} to mp4 format.")
+        print("Conversion completed.\nDeleteing temporary files...")
+        delete_temp_files(check_config("TEMPFILEPATH"))
 
     def start_action(self):
 
@@ -128,8 +130,53 @@ class App(tk.Tk):
         run_command(command)
         if check_config("AUTOCONVERT"):
             self.convert_action()
-        
+    
+    def open_settings(self):
+        subwindow = tk.Toplevel(self)
+        subwindow.title("Template Settings")
+        subwindow.geometry("350x250")
+        subwindow.resizable(False, False)
 
+        # Dropdown menu
+        dropdown_label = tk.Label(subwindow, text="Option:")
+        dropdown_label.pack(anchor="w", padx=10, pady=(10, 0))
+        dropdown_var = tk.StringVar(subwindow)
+        dropdown_options = ["Option 1", "Option 2", "Option 3"]
+        dropdown_var.set(dropdown_options[0])
+        dropdown_menu = tk.OptionMenu(subwindow, dropdown_var, *dropdown_options)
+        dropdown_menu.pack(fill="x", padx=10, pady=2)
+
+        # Input field 1
+        input1_label = tk.Label(subwindow, text="Input Field 1:")
+        input1_label.pack(anchor="w", padx=10, pady=(10, 0))
+        input1_entry = tk.Entry(subwindow)
+        input1_entry.pack(fill="x", padx=10, pady=2)
+
+        # Input field 2
+        input2_label = tk.Label(subwindow, text="Input Field 2:")
+        input2_label.pack(anchor="w", padx=10, pady=(10, 0))
+        input2_entry = tk.Entry(subwindow)
+        input2_entry.pack(fill="x", padx=10, pady=2)
+
+        # Checkbox
+        checkbox_var = tk.BooleanVar()
+        checkbox = tk.Checkbutton(subwindow, text="Enable Option", variable=checkbox_var)
+        checkbox.pack(anchor="w", padx=10, pady=(10, 0))
+
+        # Buttons frame
+        buttons_frame = tk.Frame(subwindow)
+        buttons_frame.pack(side="bottom", fill="x", pady=15)
+
+        cancel_btn = tk.Button(buttons_frame, text="Cancel", command=subwindow.destroy)
+        cancel_btn.pack(side="left", padx=10)
+
+        apply_btn = tk.Button(buttons_frame, text="Apply", command=lambda: print("Apply clicked"))
+        apply_btn.pack(side="left", padx=10)
+
+        save_btn = tk.Button(buttons_frame, text="Save", command=lambda: print("Save clicked"))
+        save_btn.pack(side="left", padx=10)
+        
+        
         
 
 

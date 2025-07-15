@@ -12,9 +12,9 @@ def load_or_create_config(config_path="config.json"):
                 config = {}
     else:
         config = {
-            "AUTONAMEGEN": True,
-            "DEFAULTOUTPUTPATH": "./ffdlp/output",
-            "TEMPFILEPATH": "./output/temp",
+            "DEFAULTOPTION": 0,
+            "DEFAULTOUTPUTPATH": "output",
+            "TEMPFILEPATH": "output/temp",
             "STATICOUTPUTNAME": "output",
             "USESTATICOUTPUTNAME": False
         }
@@ -49,3 +49,12 @@ def get_file_names(directory=check_config("TEMPFILEPATH")):
 def filename_without_extension(file_path):
         # get the file name from a path such as "output/temp/video.mp4" or "output\temp\video.mp4"
         return os.path.splitext(os.path.basename(file_path))[0]
+
+def delete_temp_files(directory=check_config("TEMPFILEPATH")):
+    if not os.path.exists(directory):
+        return
+    for file in os.listdir(directory):
+        file_path = os.path.join(directory, file)
+        if os.path.isfile(file_path):
+            os.remove(file_path)
+            print(f"Deleted temporary file: {file_path}")
