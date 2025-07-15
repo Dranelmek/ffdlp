@@ -6,7 +6,6 @@ class App(tk.Tk):
     """Main application class for the FFDLP GUI."""
     def __init__(self):
         super().__init__()
-        self.config = load_or_create_config()
         self.width = 300
         self.height = 210
         self.title("FFDLP GUI")
@@ -64,7 +63,7 @@ class App(tk.Tk):
         self.start_button.pack(side=tk.LEFT, padx=5)
 
         # Convert button
-        self.convert_button = tk.Button(self.buttons_frame, text="Convert", command=lambda: print("Convert clicked"))
+        self.convert_button = tk.Button(self.buttons_frame, text="Convert", command=lambda: self.convert_action())
         self.convert_button.pack(side=tk.LEFT, padx=5)
         
 
@@ -89,6 +88,17 @@ class App(tk.Tk):
         self.input_entry.delete(0, tk.END)
         self.input_entry.insert(tk.END, input_value)
 
+    def convert_action(self):
+        files = get_file_names(check_config("TEMPFILEPATH"))
+        if files == []:
+            print("No files to convert.")
+            return
+        for file in files:
+            command = video_convert_mp4(f"{check_config('TEMPFILEPATH')}/{file}")
+            print(f"Running command: {command}")
+            run_command(command)
+            print(f"Converted {file} to mp4 format.")
+
     def start_action(self):
 
         if self.input_entry.get() == "":
@@ -103,7 +113,7 @@ class App(tk.Tk):
             case "Date Name":
                 command = auto_ytdlp(self.input_entry.get())
             case "Static Name":
-                command = auto_ytdlp(self.input_entry.get(), self.config["STATICOUTPUTNAME"])
+                command = auto_ytdlp(self.input_entry.get(), check_config("STATICOUTPUTNAME"))
             case "Search":
                 command = auto_ytdlp(self.input_entry.get(), '%(title)s')
             case "Music":
@@ -113,7 +123,8 @@ class App(tk.Tk):
                 command = None
                 print("No valid command selected.")
                 return
-            
+        
+        print(f"Running command: {command}")
         run_command(command)
         
 
