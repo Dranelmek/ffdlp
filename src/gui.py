@@ -8,8 +8,10 @@ class App(tk.Tk):
         super().__init__()
         self.width = 300
         self.height = 210
-        self.title("FFDLP GUI")
+        self.title("FFDLP")
         self.geometry(f"{self.width}x{self.height}")
+        self.resizable(False, False)
+        self.iconbitmap("src/assets/logo.ico")
 
         # Input frame
         self.input_frame = tk.Frame(self)
@@ -49,7 +51,8 @@ class App(tk.Tk):
         self.conditional_entry.grid(row=1, column=2, padx=(1, 10), pady=0, sticky=(tk.W))
         # Initially hidden
         self.conditional_inner_frame.grid(row=1, column=1, sticky=(tk.W, tk.E))
-        self.conditional_inner_frame.grid_remove()
+        if self.setting_var.get() != "Custom Name":
+            self.conditional_inner_frame.grid_remove()
 
         # Buttons frame
         self.buttons_frame = tk.Frame(self)
@@ -59,7 +62,7 @@ class App(tk.Tk):
         self.settings_button.pack(side=tk.LEFT, padx=5)
 
         # Start button
-        self.start_button = tk.Button(self.buttons_frame, text="Start", command=lambda: self.start_action)
+        self.start_button = tk.Button(self.buttons_frame, text="Start", command=lambda: self.start_action())
         self.start_button.pack(side=tk.LEFT, padx=5)
 
         # Convert button
@@ -95,11 +98,23 @@ class App(tk.Tk):
             return
         for file in files:
             command = video_convert_mp4(f"{check_config('TEMPFILEPATH')}/{file}")
-            print(f"Running command: {command}")
+            print(f"Running command: {command.encode('utf-8')}")
             run_command(command)
-            print(f"Converted {file} to mp4 format.")
+            print(f"Converted {file.encode("utf-8")} to mp4 format.")
         print("Conversion completed.\nDeleteing temporary files...")
         delete_temp_files(check_config("TEMPFILEPATH"))
+
+    def move_temp_files(self):
+        files = get_file_names(check_config("TEMPFILEPATH"))
+        if files == []:
+            print("No files to move.")
+            return
+        for file in files:
+            source = f"{check_config('TEMPFILEPATH')}/{file}"
+            destination = f"{check_config('DEFAULTOUTPUTPATH')}/{file}"
+            os.rename(source, destination)
+            print(f"Moved {file.encode('utf-8')} to {check_config('DEFAULTOUTPUTPATH')}.")
+        print("All temporary files moved.")
 
     def start_action(self):
 
@@ -126,62 +141,80 @@ class App(tk.Tk):
                 print("No valid command selected.")
                 return
         
-        print(f"Running command: {command}")
+        print(f"Running command: {command.encode("utf-8")}")
         run_command(command)
-        if check_config("AUTOCONVERT"):
+        if check_config("AUTOCONVERT") and not self.setting_var.get() == "Music":
             self.convert_action()
+        
+        # Music files can be moved to the output folder as they will already be in the correct format
+        if self.setting_var.get() == "Music":
+            self.move_temp_files()
     
     def open_settings(self):
         subwindow = tk.Toplevel(self)
-        subwindow.title("Template Settings")
+        subwindow.title("Settings")
         subwindow.geometry("350x250")
         subwindow.resizable(False, False)
+        subwindow.iconbitmap("src/assets/logo.ico")
 
-        # Dropdown menu
+        # Options dropdown menu
         dropdown_label = tk.Label(subwindow, text="Option:")
         dropdown_label.pack(anchor="w", padx=10, pady=(10, 0))
         dropdown_var = tk.StringVar(subwindow)
-        dropdown_options = ["Option 1", "Option 2", "Option 3"]
-        dropdown_var.set(dropdown_options[0])
+        dropdown_options = ["Auto Name", "Custom Name", "Date Name", "Static Name", "Search", "Music"]
+        dropdown_var.set(dropdown_options[check_config("DEFAULTOPTION")])
         dropdown_menu = tk.OptionMenu(subwindow, dropdown_var, *dropdown_options)
         dropdown_menu.pack(fill="x", padx=10, pady=2)
 
-        # Input field 1
-        input1_label = tk.Label(subwindow, text="Input Field 1:")
-        input1_label.pack(anchor="w", padx=10, pady=(10, 0))
-        input1_entry = tk.Entry(subwindow)
-        input1_entry.pack(fill="x", padx=10, pady=2)
+        # Default output path
+        output_label = tk.Label(subwindow, text="Default Output Path:")
+        output_label.pack(anchor="w", padx=10, pady=(10, 0))
+        output_entry = tk.Entry(subwindow)
+        output_entry.insert(0, check_config("DEFAULTOUTPUTPATH"))
+        output_entry.pack(fill="x", padx=10, pady=2)
 
-        # Input field 2
-        input2_label = tk.Label(subwindow, text="Input Field 2:")
-        input2_label.pack(anchor="w", padx=10, pady=(10, 0))
-        input2_entry = tk.Entry(subwindow)
-        input2_entry.pack(fill="x", padx=10, pady=2)
+        # Default Static Name
+        default_label = tk.Label(subwindow, text="Default Static Name:")
+        default_label.pack(anchor="w", padx=10, pady=(10, 0))
+        default_entry = tk.Entry(subwindow)
+        default_entry.insert(0, check_config("STATICOUTPUTNAME"))
+        default_entry.pack(fill="x", padx=10, pady=2)
 
-        # Checkbox
+        # Auto convert checkbox
         checkbox_var = tk.BooleanVar()
-        checkbox = tk.Checkbutton(subwindow, text="Enable Option", variable=checkbox_var)
+        checkbox_var.set(check_config("AUTOCONVERT"))
+        checkbox = tk.Checkbutton(subwindow, text="Auto Convert", variable=checkbox_var)
         checkbox.pack(anchor="w", padx=10, pady=(10, 0))
 
         # Buttons frame
         buttons_frame = tk.Frame(subwindow)
-        buttons_frame.pack(side="bottom", fill="x", pady=15)
 
         cancel_btn = tk.Button(buttons_frame, text="Cancel", command=subwindow.destroy)
         cancel_btn.pack(side="left", padx=10)
 
-        apply_btn = tk.Button(buttons_frame, text="Apply", command=lambda: print("Apply clicked"))
+        apply_btn = tk.Button(buttons_frame, text="Apply", command=lambda: apply_settings())
         apply_btn.pack(side="left", padx=10)
 
-        save_btn = tk.Button(buttons_frame, text="Save", command=lambda: print("Save clicked"))
+        save_btn = tk.Button(buttons_frame, text="Save", command=lambda: save_settings())
         save_btn.pack(side="left", padx=10)
-        
-        
-        
 
+        buttons_frame.pack(side="bottom", fill="x", pady=5)
+        
+        def apply_settings():
+            # Save the settings to the config
+            config = load_or_create_config()
+            setting = {
+                "DEFAULTOPTION": dropdown_options.index(dropdown_var.get()),
+                "DEFAULTOUTPUTPATH": output_entry.get(),
+                "STATICOUTPUTNAME": default_entry.get(),
+                "AUTOCONVERT": checkbox_var.get()
+            }
+            for key, value in setting.items():
+                edit_config(config, key, value)
+            print("Settings applied.")
+        
+        def save_settings():
+            apply_settings()
+            subwindow.destroy()
 
-if __name__ == "__main__":
-    app = App()
-    app.mainloop()
-
-# TODO: Implement file conversion and settings management
+# TODO: add wait cursor when running commands

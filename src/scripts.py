@@ -22,5 +22,5 @@ def audio_ytdlp(url):
 def video_convert_mp4(input_file):
     # This function returns the ffmpeg command to convert a video file to mp4 format
     output_file = filename_without_extension(input_file)
-    print(f"FILENAME WITHOUT EXTENSION: {output_file}")
+    print(f"FILENAME WITHOUT EXTENSION: {output_file.encode('utf-8')}")
     return f'ffmpeg -i "{input_file}" -map 0 -c:v libx264 -preset slow -crf 23 -c:a aac -b:a 192k -movflags +faststart "{check_config("DEFAULTOUTPUTPATH")}/{output_file}.mp4"'

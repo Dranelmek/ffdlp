@@ -57,4 +57,4 @@ def delete_temp_files(directory=check_config("TEMPFILEPATH")):
         file_path = os.path.join(directory, file)
         if os.path.isfile(file_path):
             os.remove(file_path)
-            print(f"Deleted temporary file: {file_path}")
+            print(f"Deleted temporary file: {file_path.encode("utf-8")}")

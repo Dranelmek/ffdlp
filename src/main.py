@@ -9,6 +9,7 @@ from utils import *
 from scripts import *
 from os import listdir
 from os.path import isfile, join
+from gui import App
 
 def test(conf=None):
     # conf = load_or_create_config()
@@ -18,10 +19,11 @@ def test(conf=None):
     pass
 
 def main():
-    test()
+    app = App()
+    app.mainloop()
     
 
 if __name__ == "__main__":
     main()
 
-# TODO build GUI and add the other scripts
+# TODO bundle into an executable
