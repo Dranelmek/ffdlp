@@ -11,7 +11,7 @@ class App(tk.Tk):
         self.title("FFDLP")
         self.geometry(f"{self.width}x{self.height}")
         self.resizable(False, False)
-        self.iconbitmap("src/assets/logo.ico")
+        self.iconbitmap("logo.ico")
 
         # Input frame
         self.input_frame = tk.Frame(self)
@@ -163,7 +163,7 @@ class App(tk.Tk):
         subwindow.title("Settings")
         subwindow.geometry("350x250")
         subwindow.resizable(False, False)
-        subwindow.iconbitmap("src/assets/logo.ico")
+        subwindow.iconbitmap("logo.ico")
 
         # Options dropdown menu
         dropdown_label = tk.Label(subwindow, text="Option:")
