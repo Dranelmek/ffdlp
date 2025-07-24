@@ -19,5 +19,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-# TODO: bundle into an executable
