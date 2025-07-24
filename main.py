@@ -7,12 +7,12 @@
 # Note: Ensure that yt-dlp is installed and available in your PATH.
 # Note: Also ensure that yt-dlp ffmpeg's executables are in the project folder.
 
-from utils import *
-from scripts import *
-from gui import App
-
+from src.utils import *
+from src.scripts import *
+from src.gui import App
 
 def main():
+    check_directory()
     app = App()
     app.mainloop()
 

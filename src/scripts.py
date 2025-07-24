@@ -1,6 +1,6 @@
 import datetime
 import os
-from utils import check_config, filename_without_extension
+from src.utils import check_config, filename_without_extension
 
 def auto_ytdlp(url, name=None):
     # This function returns the yt-dlp command to download a YouTube video

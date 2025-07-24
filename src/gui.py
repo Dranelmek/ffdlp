@@ -1,6 +1,6 @@
 import tkinter as tk
-from scripts import *
-from utils import *
+from src.scripts import *
+from src.utils import *
 
 class App(tk.Tk):
     """Main application class for the FFDLP GUI."""
@@ -100,7 +100,7 @@ class App(tk.Tk):
             command = video_convert_mp4(f"{check_config('TEMPFILEPATH')}/{file}")
             print(f"Running command: {command.encode('utf-8')}")
             run_command(command)
-            print(f"Converted {file.encode("utf-8")} to mp4 format.")
+            print(f"Converted {file.encode('utf-8')} to mp4 format.")
         print("Conversion completed.\nDeleteing temporary files...")
         delete_temp_files(check_config("TEMPFILEPATH"))
 
@@ -148,7 +148,7 @@ class App(tk.Tk):
                 runnable = False
                 return
         
-        print(f"Running command: {command.encode("utf-8")}")
+        print(f"Running command: {command.encode('utf-8')}")
         if runnable:
             run_command(command)
         if check_config("AUTOCONVERT") and not self.setting_var.get() == "Music":
