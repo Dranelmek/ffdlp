@@ -24,3 +24,8 @@ def video_convert_mp4(input_file):
     output_file = filename_without_extension(input_file)
     print(f"FILENAME WITHOUT EXTENSION: {output_file.encode('utf-8')}")
     return f'ffmpeg -i "{input_file}" -map 0 -c:v libx264 -preset slow -crf 23 -c:a aac -b:a 192k -movflags +faststart "{check_config("DEFAULTOUTPUTPATH")}/{output_file}.mp4"'
+
+def video_compress(input_file):
+    # This function returns the ffmpeg command to compress a video file
+    output_file = filename_without_extension(input_file)
+    return f'ffmpeg -i "{input_file}" -c:v libx264 -pix_fmt yuv420p "{check_config("DEFAULTOUTPUTPATH")}/{output_file}_compressed.mp4"'

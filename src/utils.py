@@ -16,7 +16,7 @@ def load_or_create_config(config_path="config.json"):
             "DEFAULTOUTPUTPATH": "output",
             "TEMPFILEPATH": "output/temp",
             "STATICOUTPUTNAME": "output",
-            "USESTATICOUTPUTNAME": False
+            "AUTOCONVERT": True
         }
         with open(config_path, "w", encoding="utf-8") as f:
             json.dump(config, f, indent=4)

@@ -38,7 +38,7 @@ class App(tk.Tk):
         self.setting_label = tk.Label(self, text="Settings:")
         self.setting_label.pack()
         self.setting_var = tk.StringVar(self)
-        self.options = ["Auto Name", "Custom Name", "Date Name", "Static Name", "Search", "Music"]
+        self.options = ["Auto Name", "Custom Name", "Date Name", "Static Name", "Search", "Music", "Compress"]
         self.setting_var.set(self.options[check_config("DEFAULTOPTION")])
         self.setting_menu = tk.OptionMenu(self, self.setting_var, *self.options, command=self.on_option_change)
         self.setting_menu.pack(pady=(0, 10))
@@ -118,7 +118,8 @@ class App(tk.Tk):
 
     def start_action(self):
 
-        if self.input_entry.get() == "":
+        runnable = True
+        if self.input_entry.get() == "" and not self.setting_var.get() == "Compress":
             print("Input field is empty. Please enter a URL or search term.")
             return
 
@@ -135,14 +136,21 @@ class App(tk.Tk):
                 command = auto_ytdlp(self.input_entry.get(), '%(title)s')
             case "Music":
                 command = audio_ytdlp(self.input_entry.get())
+            case "Compress":
+                files = get_file_names(check_config("TEMPFILEPATH"))
+                for file in files:
+                    command = video_compress(f"{check_config('TEMPFILEPATH')}/{file}")
+                runnable = False 
             case _:
                 # this case is just a fallback, it should never be reached
                 command = None
                 print("No valid command selected.")
+                runnable = False
                 return
         
         print(f"Running command: {command.encode("utf-8")}")
-        run_command(command)
+        if runnable:
+            run_command(command)
         if check_config("AUTOCONVERT") and not self.setting_var.get() == "Music":
             self.convert_action()
         
