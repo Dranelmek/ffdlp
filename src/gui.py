@@ -1,17 +1,21 @@
 import tkinter as tk
-from scripts import *
-from utils import *
+from src.scripts import *
+from src.utils import *
 
 class App(tk.Tk):
     """Main application class for the FFDLP GUI."""
     def __init__(self):
         super().__init__()
+        self.protocol("WM_DELETE_WINDOW", self.on_exit)  # Handle window close
         self.width = 300
         self.height = 210
         self.title("FFDLP")
         self.geometry(f"{self.width}x{self.height}")
         self.resizable(False, False)
-        self.iconbitmap("src/assets/logo.ico")
+        try:
+            self.iconbitmap("logo.ico")
+        except tk.TclError:
+            print("Icon file not found. Using default icon.")
 
         # Input frame
         self.input_frame = tk.Frame(self)
@@ -38,7 +42,7 @@ class App(tk.Tk):
         self.setting_label = tk.Label(self, text="Settings:")
         self.setting_label.pack()
         self.setting_var = tk.StringVar(self)
-        self.options = ["Auto Name", "Custom Name", "Date Name", "Static Name", "Search", "Music"]
+        self.options = ["Auto Name", "Custom Name", "Date Name", "Static Name", "Search", "Music", "Compress"]
         self.setting_var.set(self.options[check_config("DEFAULTOPTION")])
         self.setting_menu = tk.OptionMenu(self, self.setting_var, *self.options, command=self.on_option_change)
         self.setting_menu.pack(pady=(0, 10))
@@ -100,7 +104,7 @@ class App(tk.Tk):
             command = video_convert_mp4(f"{check_config('TEMPFILEPATH')}/{file}")
             print(f"Running command: {command.encode('utf-8')}")
             run_command(command)
-            print(f"Converted {file.encode("utf-8")} to mp4 format.")
+            print(f"Converted {file.encode('utf-8')} to mp4 format.")
         print("Conversion completed.\nDeleteing temporary files...")
         delete_temp_files(check_config("TEMPFILEPATH"))
 
@@ -118,7 +122,8 @@ class App(tk.Tk):
 
     def start_action(self):
 
-        if self.input_entry.get() == "":
+        runnable = True
+        if self.input_entry.get() == "" and not self.setting_var.get() == "Compress":
             print("Input field is empty. Please enter a URL or search term.")
             return
 
@@ -135,14 +140,21 @@ class App(tk.Tk):
                 command = auto_ytdlp(self.input_entry.get(), '%(title)s')
             case "Music":
                 command = audio_ytdlp(self.input_entry.get())
+            case "Compress":
+                files = get_file_names(check_config("TEMPFILEPATH"))
+                for file in files:
+                    command = video_compress(f"{check_config('TEMPFILEPATH')}/{file}")
+                runnable = False 
             case _:
                 # this case is just a fallback, it should never be reached
                 command = None
                 print("No valid command selected.")
+                runnable = False
                 return
         
-        print(f"Running command: {command.encode("utf-8")}")
-        run_command(command)
+        print(f"Running command: {command.encode('utf-8')}")
+        if runnable:
+            run_command(command)
         if check_config("AUTOCONVERT") and not self.setting_var.get() == "Music":
             self.convert_action()
         
@@ -150,12 +162,16 @@ class App(tk.Tk):
         if self.setting_var.get() == "Music":
             self.move_temp_files()
     
+    def on_exit(self):
+        print("Exiting FFDLP...")
+        self.destroy()
+    
     def open_settings(self):
         subwindow = tk.Toplevel(self)
         subwindow.title("Settings")
         subwindow.geometry("350x250")
         subwindow.resizable(False, False)
-        subwindow.iconbitmap("src/assets/logo.ico")
+        subwindow.iconbitmap("logo.ico")
 
         # Options dropdown menu
         dropdown_label = tk.Label(subwindow, text="Option:")

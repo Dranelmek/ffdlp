@@ -1,6 +1,7 @@
 import os
 import json
 import subprocess
+import sys
 
 def load_or_create_config(config_path="config.json"):
     if os.path.exists(config_path):
@@ -16,8 +17,9 @@ def load_or_create_config(config_path="config.json"):
             "DEFAULTOUTPUTPATH": "output",
             "TEMPFILEPATH": "output/temp",
             "STATICOUTPUTNAME": "output",
-            "USESTATICOUTPUTNAME": False
+            "AUTOCONVERT": True
         }
+        print("Configuration file not found. Creating a new one with default settings.")
         with open(config_path, "w", encoding="utf-8") as f:
             json.dump(config, f, indent=4)
     return config
@@ -57,4 +59,22 @@ def delete_temp_files(directory=check_config("TEMPFILEPATH")):
         file_path = os.path.join(directory, file)
         if os.path.isfile(file_path):
             os.remove(file_path)
-            print(f"Deleted temporary file: {file_path.encode("utf-8")}")
+            print(f"Deleted temporary file: {file_path.encode('utf-8')}")
+
+def check_directory():
+    # Check if the required executables are in the same directory as the program
+
+    # debugging failsafe
+    if os.path.dirname(os.path.abspath(sys.executable)) == "C:\\Python312":
+        print("Running in debug mode. Skipping executable checks.")
+        return True
+    required_executables = ["yt-dlp.exe", "ffmpeg.exe"]
+    missing = []
+    current_dir = os.path.dirname(os.path.abspath(sys.executable))
+    for exe in required_executables:
+        if not os.path.exists(os.path.join(current_dir, exe)):
+            missing.append(exe)
+    if missing:
+        print(f"Missing required executables: {', '.join(missing)} in {current_dir}")
+        return False
+    return True
