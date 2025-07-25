@@ -3,7 +3,7 @@ FFDLP is a simple GUI that for downloading videos using yt-dlp and converting/co
 
 ## Installation
 
-The executables are currently not hosted for download. to obtain them download one of the two zip files (with or without ytdlp & ffmpeg included) in the "executables" folder and unpack them, or clone the repository and run:
+The executables are currently not hosted for download. To obtain them download one of the two zip files (with or without ytdlp & ffmpeg included) in the "executables" folder and unpack them, or clone the repository and run:
 
 ```bash
 pip install pyinstaller
