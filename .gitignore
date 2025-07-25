@@ -13,3 +13,9 @@
 
 config.json
 output/
+
+__pycache__/
+dist/
+build/
+*.spec
+*.zip
