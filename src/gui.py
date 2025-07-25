@@ -105,7 +105,7 @@ class App(tk.Tk):
             print(f"Running command: {command.encode('utf-8')}")
             run_command(command)
             print(f"Converted {file.encode('utf-8')} to mp4 format.")
-        print("Conversion completed.\nDeleteing temporary files...")
+        print("Conversion completed.\nDeleting temporary files...")
         delete_temp_files(check_config("TEMPFILEPATH"))
 
     def move_temp_files(self):
