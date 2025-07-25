@@ -6,12 +6,16 @@ class App(tk.Tk):
     """Main application class for the FFDLP GUI."""
     def __init__(self):
         super().__init__()
+        self.protocol("WM_DELETE_WINDOW", self.on_exit)  # Handle window close
         self.width = 300
         self.height = 210
         self.title("FFDLP")
         self.geometry(f"{self.width}x{self.height}")
         self.resizable(False, False)
-        self.iconbitmap("logo.ico")
+        try:
+            self.iconbitmap("logo.ico")
+        except tk.TclError:
+            print("Icon file not found. Using default icon.")
 
         # Input frame
         self.input_frame = tk.Frame(self)
@@ -157,6 +161,10 @@ class App(tk.Tk):
         # Music files can be moved to the output folder as they will already be in the correct format
         if self.setting_var.get() == "Music":
             self.move_temp_files()
+    
+    def on_exit(self):
+        print("Exiting FFDLP...")
+        self.destroy()
     
     def open_settings(self):
         subwindow = tk.Toplevel(self)
