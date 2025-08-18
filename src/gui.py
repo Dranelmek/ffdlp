@@ -205,6 +205,9 @@ class App(tk.Tk):
         # Buttons frame
         buttons_frame = tk.Frame(subwindow)
 
+        update_button = tk.Button(buttons_frame, text="Update YT-DLP", command=lambda: update_button())
+        update_button.pack(side="left", padx=10)
+
         cancel_btn = tk.Button(buttons_frame, text="Cancel", command=subwindow.destroy)
         cancel_btn.pack(side="left", padx=10)
 
@@ -216,6 +219,10 @@ class App(tk.Tk):
 
         buttons_frame.pack(side="bottom", fill="x", pady=5)
         
+        def update_button():
+            print("Updating yt-dlp...")
+            run_command(update_ytdlp())
+
         def apply_settings():
             # Save the settings to the config
             config = load_or_create_config()

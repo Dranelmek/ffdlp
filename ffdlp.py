@@ -1,4 +1,4 @@
-# Version: 1.0.1
+# Version: 1.0.2
 # Author: Kem (Drane)
 
 # This is a program that uses yt-dlp to download YouTube videos.

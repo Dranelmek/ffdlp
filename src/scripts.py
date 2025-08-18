@@ -1,5 +1,4 @@
 import datetime
-import os
 from src.utils import check_config, filename_without_extension
 
 def auto_ytdlp(url, name=None):
@@ -29,3 +28,7 @@ def video_compress(input_file):
     # This function returns the ffmpeg command to compress a video file
     output_file = filename_without_extension(input_file)
     return f'ffmpeg -i "{input_file}" -c:v libx264 -pix_fmt yuv420p "{check_config("DEFAULTOUTPUTPATH")}/{output_file}_compressed.mp4"'
+
+def update_ytdlp():
+    # This function returns the command to update yt-dlp
+    return 'yt-dlp -U'
