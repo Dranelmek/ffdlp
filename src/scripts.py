@@ -8,15 +8,15 @@ def auto_ytdlp(url, name=None):
     if name is None:
         name = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     
-    return f'yt-dlp -o "{check_config("TEMPFILEPATH")}/{name}.%(ext)s" "ytsearch:{url}"'
+    return f'yt-dlp -o "{check_config("TEMPFILEPATH")}/{name}.%(ext)s" "ytsearch:{url}" --extractor-args "youtube:player_client=android"'
 
 def std_ytdlp(url):
     # This function returns the yt-dlp command to download a YouTube video
-    return f'yt-dlp -o "{check_config("TEMPFILEPATH")}/%(title)s.%(ext)s" "{url}"'
+    return f'yt-dlp -o "{check_config("TEMPFILEPATH")}/%(title)s.%(ext)s" "{url}" --extractor-args "youtube:player_client=android"'
 
 def audio_ytdlp(url):
     # This function returns the yt-dlp command to download a YouTube video as audio
-    return f'yt-dlp -x --audio-format mp3 -o "{check_config("TEMPFILEPATH")}/%(title)s.%(ext)s" "{url}"'
+    return f'yt-dlp -x --audio-format mp3 -o "{check_config("TEMPFILEPATH")}/%(title)s.%(ext)s" "{url}" --extractor-args "youtube:player_client=android"'
 
 def video_convert_mp4(input_file):
     # This function returns the ffmpeg command to convert a video file to mp4 format
