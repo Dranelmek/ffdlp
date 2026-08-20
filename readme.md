@@ -7,7 +7,7 @@ The executables are currently not hosted for download. To obtain them download o
 
 ```bash
 pip install pyinstaller
-pyinstaller --onefile --icon=logo.ico ffdlp.py
+PyInstaller --onefile --icon=logo.ico ffdlp.py
 ```
 from the root of the project.
 
